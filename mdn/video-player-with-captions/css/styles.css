@@ -197,12 +197,13 @@ video {
 }
 
 /* WebVTT cues */
-::cue { 
-	color:#ccc;
-}
-::cue(v[voice='Test']) {
-	color:#fff;
-	background:#0095dd;
+::cue {
+
+    color: #fff;
+    opacity: 1;
+    font: 4em "Open Sans", sans-serif;
+    line-height: 3em;
+    background: #0095dd
 }
 
 /* fullscreen */
