@@ -190,13 +190,13 @@ video {
 	border-radius:2px;
 }
 
-/* WebVTT cues */
+/* WebVTT CHANGE THIS cues */
 ::cue {
 
     color: #fff;
     opacity: 1;
-    font: 4em "Open Sans", sans-serif;
-    line-height: 3em;
+    font: 2em "Open Sans", sans-serif;
+    line-height: 1em;
     background: #0095dd
 }
 
