@@ -1,3 +1,6 @@
 [submodule "get_iplayer"]
 	path = get_iplayer
 	url = https://github.com/get-iplayer/get_iplayer.git
+[submodule "pysrt"]
+	path = pysrt
+	url = https://github.com/byroot/pysrt.git
