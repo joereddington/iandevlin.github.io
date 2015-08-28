@@ -26,13 +26,8 @@ file_list = drive.ListFile({'q':"'0BxcNVxCOXNUvfkIyMWxIcGU2WkdfX0FiOTljYzVlZ1V5e
 for file1 in file_list:
   print 'title: %s, id: %s' % (file1['title'], file1['id'])
   print file1['mimeType']
- 
   if file1['mimeType']=="application/vnd.google-apps.spreadsheet":
      filename="sources/"+file1['title'].replace(" ","")+".csv"
      file1.GetContentFile(filename, mimetype='text/csv')
      continue 
 
-  if file1['mimeType']=="application/vnd.google-apps.folder":
-     continue
-     filename="sources/"+file1['title'].replace(" ","")+".txt"
-     file1.GetContentFile(filename, mimetype='text/plain')
