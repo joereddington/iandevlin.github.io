@@ -39,7 +39,6 @@ def get_translated_subs(filename, english=false):
                 print row[4]
 
 
-
 def download_folder(url=""):
     drive = GoogleDrive(enguage_auth())
     search_string = "'0BxcNVxCOXNUvfkIyMWxIcGU2WkdfX0FiOTljYzVlZ1V5eW5NXzY0bHpQUGpPV3hfTkI1VHM' in parents and trashed=false"
