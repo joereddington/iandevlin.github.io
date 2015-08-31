@@ -28,7 +28,7 @@ def chop_input_url(url):
         return url[:lastslash_loc]
     return url
 
-def get_translated_subs(filename, english=false):
+def get_translated_subs(filename, english=False):
     "returns a sorted list of nextActions"
     with open(filename) as subs_file:
         reader = csv.reader(subs_file, skipinitialspace=True)
@@ -56,7 +56,7 @@ def download_folder(url=""):
                 continue
             if file1['mimeType'] == "application/vnd.google-apps.folder":
                 continue
-    get_translated_subs(filename)
+    #get_translated_subs(filename)
 
 if __name__ == "__main__":
 #    print chop_input_url("https://docs.google.com/spreadsheets/d/1p5f8Isz8ds-is5xnaD_bLZgnveF6jea3SYdJKVmRJbM")
