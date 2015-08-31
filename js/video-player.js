@@ -11,7 +11,7 @@
 		var videoControls = document.getElementById('video-controls');
 
 		// Hide the default controls
-		video.controls = false;
+//		video.controls = false;
 
 		// Display the user defined video controls
 		videoControls.setAttribute('data-state', 'visible');
@@ -144,9 +144,9 @@
 			});	
 
 			// Turn off all subtitles
-			for (var i = 0; i < video.textTracks.length; i++) {
-				video.textTracks[i].mode = 'hidden';
-			}
+//			for (var i = 0; i < video.textTracks.length; i++) {
+//				video.textTracks[i].mode = 'hidden';
+//			}
 
 			// Creates and returns a menu item for the subtitles language menu
 			var subtitleMenuButtons = [];
