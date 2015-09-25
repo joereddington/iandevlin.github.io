@@ -4,35 +4,46 @@ import get_files
 import os
 
 
+#So the main thing to do now is to split this between the various languages that appear in an individual file
+
 def get_gformat_subs(filename):
         """returns the set of subtitles in a csv file,
         intended to parse files form google drive"""
         with open(filename, 'rb') as subs_file:
                 reader = csv.reader(subs_file, skipinitialspace=True)
-                next(reader, None)  # skip the header row
+                headers=next(reader, None)[3:]
+                print "Headers", headers
                 lines = filter(None, reader)
-                return lines
+                return (headers,lines)
 
 
 def convert_sup_to_srt(filename):
+        names=[]
+        column=2
         try:
                 print "Examining: "+filename
-                group = get_gformat_subs(filename)
-                subs = pysrt.SubRipFile()
-                for line in group:
-                        current_sub = pysrt.SubRipItem()
-                        current_sub.start = line[0].replace(',', '.')
-                        current_sub.end = line[1].replace(',', '.')
-                        current_sub.text = line[3].decode('latin-1')
-                        subs.append(current_sub)
+                (headers, group) = get_gformat_subs(filename)
+                print "Headers", headers
+                for language in headers:
+                    subs = pysrt.SubRipFile()
+                    print "We are currently looking at", language
+                    column=column+1
+                    tag=language.replace(" ","_")
+                    for line in group:
+                            current_sub = pysrt.SubRipItem()
+                            current_sub.start = line[0].replace(',', '.')
+                            current_sub.end = line[1].replace(',', '.')
+                            current_sub.text = line[column].decode('latin-1')
+                            subs.append(current_sub)
 
-                subs.save('temp.vtt')
-                new_filename = 'live/subtitles/' + \
-                    os.path.splitext(os.path.basename(filename))[0]+'.vtt'
-                print "Created:" + new_filename
-                os.system('echo WEBVTT > '+new_filename)
-                os.system('cat temp.vtt >> '+new_filename)
-                return new_filename
+                    subs.save('temp.vtt')
+                    new_filename = 'live/subtitles/' + \
+                        os.path.splitext(os.path.basename(filename))[0]+tag+'.vtt'
+                    print "Created:" + new_filename
+                    os.system('echo WEBVTT > '+new_filename)
+                    os.system('cat temp.vtt >> '+new_filename)
+                    names.append(new_filename)
+                return names
         except IndexError:
                 print "I'm Sorry - wrong sort of file :( "
                 return ""
@@ -71,6 +82,7 @@ files_downloaded = get_files.download_folder()
 # Then we convert them into files that can be played by our player.
 for episode in files_downloaded:
         print episode
-        newfilename = convert_sup_to_srt(episode)
-        print "New filename is: ", newfilename
-        create_webpage(newfilename)
+        newfilenames = convert_sup_to_srt(episode)
+        for newfilename in newfilenames:
+            print "New filename is: ", newfilename
+            create_webpage(newfilename)
