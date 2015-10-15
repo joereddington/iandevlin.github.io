@@ -6,19 +6,30 @@
 <Body> 
 <div id="columns">
 
-<h1>Overview</h1>
-This is the list of currently active files in the IMPS software:<br>
+<h1>Subtitles Available</h1>
+This is the list of subtitles currently available to view:
+
+<table>
+<tr><td>
+Program
+</td>
+<td>
+Language</td>
 <?php 
 $files1 = scandir(".");
 //print_r($files1);
 foreach ($files1 as $file){
 	if (strpos($file,'html') !== false){
-		echo "<a href=\"".$file;
-		echo "\">".$file."</a><br>";
+		$split_string=explode("_",$file);
+		echo "<tr><td><a href=\"".$file;
+		$language=str_replace(".html","",$split_string[1]);
+		$program_name=ucfirst(str_replace("-"," ",$split_string[0]));
+		echo "\">".$program_name."</a></td><td>".$language."</td></tr>";
 	}
 }
 ?>
 
+</table>
 <br>
 <br>
 <br>
