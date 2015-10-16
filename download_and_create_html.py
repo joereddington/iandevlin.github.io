@@ -2,9 +2,16 @@ import pysrt
 import csv
 import get_files
 import os
+import argparse
 
+def setup_argument_list():
+     "creates and parses the argument list for naCount"
+     parser = argparse.ArgumentParser(
+         description=__doc__)
+     parser.add_argument('-u', nargs="?",dest='url',
+                         help="Updates one particular URL")
+     return parser.parse_args()
 
-#So the main thing to do now is to split this between the various languages that appear in an individual file
 
 def get_gformat_subs(filename):
         """returns the set of subtitles in a csv file,
@@ -82,6 +89,7 @@ files_downloaded = get_files.download_folder()
 # Then we convert them into files that can be played by our player.
 for episode in files_downloaded:
         print episode
+        break
         newfilenames = convert_sup_to_srt(episode)
         for newfilename in newfilenames:
             print "New filename is: ", newfilename

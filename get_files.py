@@ -41,6 +41,19 @@ def get_translated_subs(filename, english=False):
                                 print row[4]
 
 
+def download_file(id, filename, mimetype_in):
+        drive = GoogleDrive(enguage_auth())
+        myfile = drive.CreateFile({'id': id})
+        myfile.GetContentFile(filename, mimetype=mimetype_in)
+
+
+def test_download_file():
+        download_file(
+            '1EthTy-SWjJjFMqlPkC0bNb-6cvE-xpTVKFX2-HzLxXg',
+            'hope.csv',
+            'text/csv')
+
+
 def download_folder(url=""):
         drive = GoogleDrive(enguage_auth())
         search_string = "'0BxcNVxCOXNUvfkIyMWxIcGU2WkdfX0FiOTljYzVlZ1V5eW5NXzY0bHpQUGpPV3hfTkI1VHM' in parents and trashed=false"
