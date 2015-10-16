@@ -82,15 +82,28 @@ def create_webpage(filename):
                 myfile.write(mastertext)
 
 
+
+def process_subfile(filename):
+    "Subfiles might produce many many html files"
+    print filename
+    return
+    newfilenames = convert_sup_to_srt(filename)
+    for newfilename in newfilenames:
+        print "New filename is: ", newfilename
+        create_webpage(newfilename)
+
+def convert_folder_into_html(files_downloaded):
+    " Then we convert them into files that can be played by our player."
+    for filename in files_downloaded:
+        process_subfile(filename)
+
 # First thing is that we download the files that are there.
 #
-files_downloaded = get_files.download_folder()
-#
-# Then we convert them into files that can be played by our player.
-for episode in files_downloaded:
-        print episode
-        break
-        newfilenames = convert_sup_to_srt(episode)
-        for newfilename in newfilenames:
-            print "New filename is: ", newfilename
-            create_webpage(newfilename)
+args=setup_argument_list()
+if args.url:
+    url=args.url
+    filename=get_files.download_file(args.url)
+    process_subfile(filename)
+else:
+    convert_folder_into_html(get_files.download_folder())
+

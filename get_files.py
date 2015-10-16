@@ -45,6 +45,7 @@ def download_file(id, filename, mimetype_in):
         drive = GoogleDrive(enguage_auth())
         myfile = drive.CreateFile({'id': id})
         myfile.GetContentFile(filename, mimetype=mimetype_in)
+        return filename
 
 
 def test_download_file():
