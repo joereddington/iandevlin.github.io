@@ -38,7 +38,7 @@ def convert_sup_to_srt(filename):
 
                     subs.save('temp.vtt')
                     new_filename = 'live/subtitles/' + \
-                        os.path.splitext(os.path.basename(filename))[0]+tag+'.vtt'
+                        os.path.splitext(os.path.basename(filename))[0]+"_"+tag+'.vtt'
                     print "Created:" + new_filename
                     os.system('echo WEBVTT > '+new_filename)
                     os.system('cat temp.vtt >> '+new_filename)
