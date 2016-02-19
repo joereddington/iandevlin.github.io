@@ -49,7 +49,7 @@ def convert_sup_to_srt(filename, file_info):
                                 os.path.basename(filename))[0]+tag+'.vtt'
                         os.system('echo WEBVTT > '+new_filename)
                         os.system('cat temp.vtt >> '+new_filename)
-                        shortname = os.path.splitext(os.path.basename(filename))
+                        shortname = os.path.splitext(os.path.basename(filename))[0]
                         if(shortname in prog_dict):
                                 if(prog_dict[shortname] < len(subs)):
                                         prog_dict[shortname] = len(subs)
@@ -90,6 +90,7 @@ def create_webpage(filename):
         # print new_filename
         with open(new_filename, "w") as myfile:
                 myfile.write(mastertext)
+        return new_filename
 
 
 def convert_folder_into_html(files_downloaded):
@@ -109,16 +110,20 @@ def convert_folder_into_html(files_downloaded):
                           if sfile[4] > size_cutoff]
         for sfile in complete_files:
                 print "{}% of the {} version of {} is complete.".format(sfile[4], sfile[3], sfile[0])
-                create_webpage(sfile[2])
+                print sfile
+                link=create_webpage(sfile[2])
+                mytable.write(("<tr><td>{}</td>"+"<td><a href={}>{}</a></td><td>{:03.0f}%</td></tr>").format(sfile[0],link,sfile[3],sfile[4]))
 
 
 # First thing is that we download the files that are there.
 #
 prog_dict={}
 mytable=open("mytable.html", "w")
+mytable.write("<table>")
 convert_folder_into_html(get_files.download_folder())
 # print "hey"
 # for i in prog_dict.keys():
 #        print "key: {}, value: {}".format(i, prog_dict[i])
 # print "there"
+mytable.write("</table>")
 mytable.close()
