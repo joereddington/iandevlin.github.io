@@ -4,6 +4,8 @@ import get_files
 import os
 import argparse
 
+size_cutoff = 30  # measured as whole percent - 100 = 100%
+
 
 def setup_argument_list():
         "creates and parses the argument list for naCount"
@@ -47,7 +49,7 @@ def convert_sup_to_srt(filename, file_info):
                                 os.path.basename(filename))[0]+tag+'.vtt'
                         os.system('echo WEBVTT > '+new_filename)
                         os.system('cat temp.vtt >> '+new_filename)
-                        shortname=os.path.splitext(os.path.basename(filename))
+                        shortname = os.path.splitext(os.path.basename(filename))
                         if(shortname in prog_dict):
                                 if(prog_dict[shortname] < len(subs)):
                                         prog_dict[shortname] = len(subs)
@@ -90,24 +92,6 @@ def create_webpage(filename):
                 myfile.write(mastertext)
 
 
-def process_subfile(filename):
-        "Subfiles might produce many many html files"
-     #   print "here" + filename
-        try:
-                newfilenames = convert_sup_to_srt(filename)
-        except ValueError:
-                # We believe this is the result of the wrong type of file being
-                # passed in
-                raise ValueError("The wrong file was given to process_subfile")
-        total_utterances = newfilenames[0][1]
-        for newfilename in newfilenames:
-                percentage_complete = float(
-                    newfilename[1])/float(total_utterances)*100
-                return "{} version is  {}% complete with filename: {}".format(
-                        newfilename[2], percentage_complete, newfilename[0])
-                create_webpage(newfilename[0])
-
-
 def convert_folder_into_html(files_downloaded):
         """ Then we convert them into files that can be played by our player.
         while also creating the table of thier information"""
@@ -119,25 +103,22 @@ def convert_folder_into_html(files_downloaded):
                 percentage_complete = float(
                         sfile[1])/float(prog_dict[sfile[0]])*100
                 sfile.append(percentage_complete)
-                print "{}% of the {} version of {} is complete.".format(sfile[4],sfile[3],sfile[0])
 
+        # file_info now contains accurate percentages
+        complete_files = [sfile for sfile in file_info
+                          if sfile[4] > size_cutoff]
+        for sfile in complete_files:
+                print "{}% of the {} version of {} is complete.".format(sfile[4], sfile[3], sfile[0])
+                create_webpage(sfile[2])
 
 
 # First thing is that we download the files that are there.
 #
-prog_dict = {}
-mytable = open("mytable.html", "w")
-args = setup_argument_list()
-if args.url:
-        url = args.url
-        filename = get_files.download_file(args.url)
-        text = process_subfile(filename)
-        print text
-        mytable.write(text)
-else:
-        convert_folder_into_html(get_files.download_folder())
-#print "hey"
-#for i in prog_dict.keys():
+prog_dict={}
+mytable=open("mytable.html", "w")
+convert_folder_into_html(get_files.download_folder())
+# print "hey"
+# for i in prog_dict.keys():
 #        print "key: {}, value: {}".format(i, prog_dict[i])
-#print "there"
+# print "there"
 mytable.close()
