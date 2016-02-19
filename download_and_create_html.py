@@ -42,7 +42,7 @@ def convert_sup_to_srt(filename, file_info):
                                         current_sub.end = line[
                                                 1].replace(',', '.')
                                         current_sub.text = line[
-                                                column].decode('latin-1')
+                                                column].decode('utf-8')
                                         subs.append(current_sub)
                         subs.save('temp.vtt')
                         new_filename = 'live/subtitles/' + os.path.splitext(
