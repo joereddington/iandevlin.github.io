@@ -74,7 +74,7 @@ def create_webpage(filename):
 <html lang="en-IE">
    <head>
       <meta charset="utf-8" />
-      <title>Supertitle Exmaple</title>
+      <title>Supertitle</title>
       <link rel="stylesheet" href="css/styles.css" />
    </head>
    <body>
@@ -112,7 +112,7 @@ def convert_folder_into_html(files_downloaded):
                 print "{}% of the {} version of {} is complete.".format(sfile[4], sfile[3], sfile[0])
                 print sfile
                 link=create_webpage(sfile[2])
-                mytable.write(("<tr><td>{}</td>"+"<td><a href={}>{}</a></td><td>{:03.0f}%</td></tr>").format(sfile[0],link,sfile[3],sfile[4]))
+                mytable.write(("<tr><td>{}</td>"+"<td><a href={}>{}</a></td><td>{:.0f}%</td></tr>").format(sfile[0],link,sfile[3],sfile[4]))
 
 
 # First thing is that we download the files that are there.
@@ -120,6 +120,7 @@ def convert_folder_into_html(files_downloaded):
 prog_dict={}
 mytable=open("mytable.html", "w")
 mytable.write("<table>")
+mytable.write("<tr><td>Program</td>"+"<td>Language</td><td>Percent Complete</td></tr>")
 convert_folder_into_html(get_files.download_folder())
 # print "hey"
 # for i in prog_dict.keys():
