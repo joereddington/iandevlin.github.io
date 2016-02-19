@@ -47,13 +47,14 @@ def convert_sup_to_srt(filename, file_info):
                                 os.path.basename(filename))[0]+tag+'.vtt'
                         os.system('echo WEBVTT > '+new_filename)
                         os.system('cat temp.vtt >> '+new_filename)
-                        if(filename in prog_dict):
-                            if(prog_dict[filename] < len(subs)):
-                                prog_dict[filename] = len(subs)
+                        shortname=os.path.splitext(os.path.basename(filename))
+                        if(shortname in prog_dict):
+                                if(prog_dict[shortname] < len(subs)):
+                                        prog_dict[shortname] = len(subs)
                         else:
-                                prog_dict[filename] = len(subs)
+                                prog_dict[shortname] = len(subs)
                         file_info.append(
-    (filename, len(subs), new_filename, language))
+                            [shortname, len(subs), new_filename, language])
                         print (new_filename)
         except AttributeError:
                 # We would expect this to be because we've been handed a file that's outside our type
@@ -112,12 +113,13 @@ def convert_folder_into_html(files_downloaded):
         while also creating the table of thier information"""
         file_info = []
         for filename in files_downloaded:
-            convert_sup_to_srt(filename, file_info)
+                convert_sup_to_srt(filename, file_info)
         # file_info should now contain a list of files
         for sfile in file_info:
-            percentage_complete = float(sfile[1])/float(prog_dict[sfile[0]])*100
-            print sfile
-
+                percentage_complete = float(
+                        sfile[1])/float(prog_dict[sfile[0]])*100
+                sfile.append(percentage_complete)
+                print "{}% of the {} version of {} is complete.".format(sfile[4],sfile[3],sfile[0])
 
 
 
@@ -134,8 +136,8 @@ if args.url:
         mytable.write(text)
 else:
         convert_folder_into_html(get_files.download_folder())
-print "hey"
-for i in prog_dict.keys():
-    print "key: {}, value: {}".format(i, prog_dict[i])
-print "there"
+#print "hey"
+#for i in prog_dict.keys():
+#        print "key: {}, value: {}".format(i, prog_dict[i])
+#print "there"
 mytable.close()
