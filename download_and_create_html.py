@@ -20,21 +20,16 @@ def get_gformat_subs(filename):
         with open(filename, 'rb') as subs_file:
                 reader = csv.reader(subs_file, skipinitialspace=True)
                 headers = next(reader, None)[3:]
-#                print "Headers", headers
                 lines = filter(None, reader)
                 return (headers, lines)
 
 
-def convert_sup_to_srt(filename):
-        names = []
+def convert_sup_to_srt(filename, file_info):
         column = 2
         try:
-#                print "Examining: "+filename
                 (headers, group) = get_gformat_subs(filename)
-                #print "Headers", headers
                 for language in headers:
                         subs = pysrt.SubRipFile()
-                       # print "We are currently looking at", language
                         column = column+1
                         tag = language.replace(" ", "_")
                         for line in group:
@@ -50,18 +45,25 @@ def convert_sup_to_srt(filename):
                         subs.save('temp.vtt')
                         new_filename = 'live/subtitles/' + os.path.splitext(
                                 os.path.basename(filename))[0]+tag+'.vtt'
-#                        print "Created:" + new_filename
                         os.system('echo WEBVTT > '+new_filename)
                         os.system('cat temp.vtt >> '+new_filename)
-                        names.append((new_filename, len(subs), language))
-                return names
-        except IndexError:
-                print "I'm Sorry - wrong sort of file :( "
-                return ""
+                        if(filename in prog_dict):
+                            if(prog_dict[filename] < len(subs)):
+                                prog_dict[filename] = len(subs)
+                        else:
+                                prog_dict[filename] = len(subs)
+                        file_info.append(
+    (filename, len(subs), new_filename, language))
+                        print (new_filename)
+        except AttributeError:
+                # We would expect this to be because we've been handed a file that's outside our type
+                # TODO: we should identify exactly where this error appears for
+                # various types of tests
+                pass
 
 
 def create_webpage(filename):
-#        print "Create_webpage in:", filename
+        #        print "Create_webpage in:", filename
         """Creates a html file inserts the subtitle filename and saves it with
         the correct filename"""
         mastertext = """
@@ -82,7 +84,7 @@ def create_webpage(filename):
 </html>""".format(filename)
         new_filename = "live/"+os.path.splitext(
             os.path.basename(filename))[0]+'.html'
-        print new_filename
+        # print new_filename
         with open(new_filename, "w") as myfile:
                 myfile.write(mastertext)
 
@@ -90,30 +92,50 @@ def create_webpage(filename):
 def process_subfile(filename):
         "Subfiles might produce many many html files"
      #   print "here" + filename
-        newfilenames = convert_sup_to_srt(filename)
+        try:
+                newfilenames = convert_sup_to_srt(filename)
+        except ValueError:
+                # We believe this is the result of the wrong type of file being
+                # passed in
+                raise ValueError("The wrong file was given to process_subfile")
         total_utterances = newfilenames[0][1]
-     #   print total_utterances
         for newfilename in newfilenames:
-     #           print newfilename[0]
-#                print newfilename[1]
                 percentage_complete = float(
                     newfilename[1])/float(total_utterances)*100
-                print "{} version is  {}% complete with filename: {}".format(newfilename[2], percentage_complete, newfilename[0])
+                return "{} version is  {}% complete with filename: {}".format(
+                        newfilename[2], percentage_complete, newfilename[0])
                 create_webpage(newfilename[0])
 
 
 def convert_folder_into_html(files_downloaded):
         """ Then we convert them into files that can be played by our player.
         while also creating the table of thier information"""
+        file_info = []
         for filename in files_downloaded:
-                process_subfile(filename)
+            convert_sup_to_srt(filename, file_info)
+        # file_info should now contain a list of files
+        for sfile in file_info:
+            percentage_complete = float(sfile[1])/float(prog_dict[sfile[0]])*100
+            print sfile
+
+
+
 
 # First thing is that we download the files that are there.
 #
+prog_dict = {}
+mytable = open("mytable.html", "w")
 args = setup_argument_list()
 if args.url:
         url = args.url
         filename = get_files.download_file(args.url)
-        process_subfile(filename)
+        text = process_subfile(filename)
+        print text
+        mytable.write(text)
 else:
         convert_folder_into_html(get_files.download_folder())
+print "hey"
+for i in prog_dict.keys():
+    print "key: {}, value: {}".format(i, prog_dict[i])
+print "there"
+mytable.close()
