@@ -112,7 +112,7 @@ def convert_folder_into_html(files_downloaded):
                 print "{}% of the {} version of {} is complete.".format(sfile[4], sfile[3], sfile[0])
                 print sfile
                 link=create_webpage(sfile[2])
-                mytable.write(("<tr><td>{}</td>"+"<td><a href={}>{}</a></td><td>{:.0f}%</td></tr>").format(sfile[0],link,sfile[3],sfile[4]))
+                mytable.write(("<tr><td>{}</td>"+"<td><a href=../SubtitlePlayer/{}>{}</a></td><td>{:.0f}%</td></tr>").format(sfile[0],link,sfile[3],sfile[4]))
 
 
 # First thing is that we download the files that are there.
