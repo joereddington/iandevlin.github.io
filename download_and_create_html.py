@@ -33,7 +33,7 @@ def convert_sup_to_srt(filename, file_info):
                 for language in headers:
                         subs = pysrt.SubRipFile()
                         column = column+1
-                        tag = language.replace(" ", "_")
+                        tag = language.replace(" ", "_").decode('ascii', 'ignore')
                         for line in group:
                                 if (len(line[column]) > 1):
                                         current_sub = pysrt.SubRipItem()
