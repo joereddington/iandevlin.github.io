@@ -62,9 +62,12 @@ def download_folder(url=""):
         files_found = []
         file_list = drive.ListFile(
             {'q': search_string}).GetList()
+	f = open("editlist.html","w")
+	f.write("<table>")
         for file1 in file_list:
                 if url in file1['embedLink']:
-                        print 'title: %s, id: %s' % (file1['title'], file1['id'])
+                #        print 'title: %s, id: %s' % (file1['title'], file1['id'])
+                        f.write('<tr><td><a href=%s> %s</a></td></tr>' % (file1['alternateLink'], file1['title']))
                         if file1['mimeType'] == "application/vnd.google-apps.spreadsheet":
                                 filename = "sources/" + \
                                     file1['title'].replace(" ", "")+".csv"
@@ -76,6 +79,8 @@ def download_folder(url=""):
                         if file1['mimeType'] == "application/vnd.google-apps.folder":
                                 continue
         # get_translated_subs(filename)
+	f.write("</table>")
+	f.close()
         return files_found
 
 if __name__ == "__main__":
